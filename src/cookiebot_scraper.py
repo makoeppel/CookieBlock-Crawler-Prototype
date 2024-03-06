@@ -8,9 +8,11 @@ import requests
 from bs4 import BeautifulSoup
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException, StaleElementReferenceException
+from selenium.webdriver.common.by import By
 
 import logging
 import re
+import json
 import os.path
 from typing import Tuple
 from ast import literal_eval
@@ -54,7 +56,7 @@ class CookiebotScraper(BaseScraper):
         :return WebElement: first matching script tag, or None otherwise
         """
         def __call__(self, driver):
-            elems = driver.find_elements_by_tag_name("script")
+            elems = driver.find_elements(By.TAG_NAME, "script")
             for e in elems:
                 try:
                     cbid = e.get_attribute("data-cbid")
@@ -244,8 +246,9 @@ class CookiebotScraper(BaseScraper):
                 if not matchobj:
                     logger.warning(f"Could not find array for category {catname}")
                     continue
-
-                cookies = literal_eval(matchobj.group(1))
+                # NOTE: the literal_eval function did not work so I went with json.loads()
+                # cookies = literal_eval(matchobj.group(1))
+                cookies = json.loads(matchobj.group(1))
                 cookie_count += len(cookies)
                 for c in cookies:
                     self.collect_cookie_dat(site_url=url, name=c[0], domain=c[1], path="/",

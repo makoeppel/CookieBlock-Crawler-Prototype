@@ -25,10 +25,11 @@ import requests
 import logging
 import re
 import json
-import js2py
+#import js2py
 
 from typing import Optional, List, Tuple, Dict, Any
 from selenium.common.exceptions import TimeoutException, StaleElementReferenceException
+from selenium.webdriver.common.by import By
 
 from src.base_scraper import BaseScraper, CrawlState, CookieCategory, uuid_pattern
 
@@ -103,7 +104,7 @@ class OneTrustScraper(BaseScraper):
 
         try:
             self.webdriver.implicitly_wait(5)
-            elems = self.webdriver.find_elements_by_tag_name("script")
+            elems = self.webdriver.find_elements(By.TAG_NAME, "script")
             for e in elems:
                 try:
                     # Find a script tag with the  data-domain-script attribute
@@ -273,7 +274,7 @@ class OneTrustScraper(BaseScraper):
 
         try:
             self.webdriver.implicitly_wait(5)
-            elems = self.webdriver.find_elements_by_tag_name("script")
+            elems = self.webdriver.find_elements(By.TAG_NAME, "script")
             for e in elems:
                 try:
                     source = e.get_attribute("src")

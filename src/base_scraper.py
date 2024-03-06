@@ -25,7 +25,7 @@ from selenium import webdriver
 from selenium.webdriver.common.alert import Alert
 import selenium.common.exceptions as selenium_excepts
 from selenium.webdriver.remote.webdriver import WebDriver
-from selenium.webdriver import Firefox
+from selenium.webdriver import Firefox, Chrome
 
 logger = logging.getLogger("main")
 
@@ -215,12 +215,31 @@ class BaseScraper(ABC):
         # profile.set_preference("permissions.default.image", 2)  # disable loading images
         options.add_argument("--headless")
 
-        firefox = webdriver.Firefox(firefox_profile=profile, options=options)
+        # TODO: the following did not work
+        #firefox = webdriver.Firefox(firefox_profile=profile, options=options)
+        firefox = webdriver.Firefox(options)
         firefox.set_page_load_timeout(30)
         firefox.set_script_timeout(20)
 
         logger.debug(f"Firefox webdriver initialized in headless mode.")
         return firefox
+
+
+    def _init_chrome_webdriver(self) -> Chrome:
+        """
+        Set up Chrome webdriver with a number of settings.
+        """
+        options = webdriver.ChromeOptions()
+
+        # TODO: add options
+        options.add_argument("--headless")
+
+        chrome = webdriver.Chrome(options)
+        chrome.set_page_load_timeout(30)
+        chrome.set_script_timeout(20)
+
+        logger.debug(f"Chrome webdriver initialized in headless mode.")
+        return chrome
 
 
     def start_webdriver(self, wtype: str = "Firefox") -> None:
@@ -232,6 +251,8 @@ class BaseScraper(ABC):
 
         if wtype == "Firefox":
             self.webdriver = self._init_firefox_webdriver()
+        elif wtype == "Chrome":
+            self.webdriver = self._init_chrome_webdriver()
         else:
             raise ValueError("Unsupported Webdriver Type")
 

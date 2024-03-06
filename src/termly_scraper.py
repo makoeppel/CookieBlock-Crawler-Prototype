@@ -15,6 +15,7 @@ import pickle
 from typing import Tuple, Optional, Dict
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException, StaleElementReferenceException
+from selenium.webdriver.common.by import By
 from src.base_scraper import BaseScraper, CookieCategory, CrawlState, uuid_pattern
 
 logger = logging.getLogger("scrape_cl.BaseScraper.TermlyScraper")
@@ -53,7 +54,7 @@ class TermlyScraper(BaseScraper):
         """
 
         def __call__(self, driver):
-            elems = driver.find_elements_by_tag_name("script")
+            elems = driver.find_elements(By.TAG_NAME, "script")
             for e in elems:
                 try:
                     termly_found = False

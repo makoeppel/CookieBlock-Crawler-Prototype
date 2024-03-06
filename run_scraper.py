@@ -17,7 +17,7 @@ Currently supports:
 - Termly
 -----------------------------------
 Usage:
-    run_scraper.py (cookiebot|onetrust|termly) (--url <u> | --pkl <fpkl> | --file <fpath>)... [--assume_http] [--loglevel <LEVEL>] [--dbname <DB>]
+    run_scraper.py (cookiebot|onetrust|termly) (firefox|chrome) (--url <u> | --pkl <fpkl> | --file <fpath>)... [--assume_http] [--loglevel <LEVEL>] [--dbname <DB>]
     run_scraper.py --help
 
 Options:
@@ -165,9 +165,19 @@ def main():
         logger.error("Unsupported Consent Management Provider")
         return 2
 
+    if cargs["firefox"]:
+        logger.info("Firefox selected")
+        wtype = "Firefox"
+    elif cargs["chrome"]:
+        logger.info("Chrome selected")
+        wtype = "Chrome"
+    else:
+        logger.error("Select a broswer firefox|chrome")
+        return 2
+
     # Perform the crawl
     sess = Session()
-    scraper.start_webdriver()
+    scraper.start_webdriver(wtype)
     comp_succ = comp_fail = 0
     total = len(sites)
     try:

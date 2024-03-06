@@ -10,6 +10,7 @@ from docopt import docopt
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.by import By
 
 class exists_script_tag_with_cbid:
     """Class to check if there exists a script tag with the data-cbid attribute.
@@ -20,7 +21,7 @@ class exists_script_tag_with_cbid:
     idhash_pattern = "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"
 
     def __call__(self, driver):
-      elems = driver.find_elements_by_tag_name("script")
+      elems = driver.find_elements(By.TAG_NAME, "script")
       for e in elems:
           cbid = e.get_attribute("data-cbid")
           if cbid and re.match(self.idhash_pattern, str(cbid)):

@@ -12,6 +12,7 @@ from bs4 import BeautifulSoup
 from docopt import docopt
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.by import By
 
 ddid_pattern = "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"
 
@@ -51,7 +52,7 @@ def variant_one(url: str) -> int:
         driver.get(url)
         try:
             driver.implicitly_wait(5)
-            elems = driver.find_elements_by_tag_name("script")
+            elems = driver.find_elements(By.TAG_NAME, "script")
             for e in elems:
                 try:
                     dd_id = e.get_attribute("data-domain-script")
@@ -136,7 +137,7 @@ def variant_two(url):
         element = None
         try:
             driver.implicitly_wait(5)
-            elems = driver.find_elements_by_tag_name("script")
+            elems = driver.find_elements(By.TAG_NAME, "script")
             for e in elems:
                 try:
                     source = e.get_attribute("src")
